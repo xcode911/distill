@@ -27,8 +27,6 @@ Examples:
 - `terraform plan 2>&1 | distill "is this safe?"`
 - `npm audit 2>&1 | distill "extract vulnerabilities as JSON"`
 
-ALWAYS WAIT FOR A RESPONSE FROM `distill` (timeout 5min) before thinking it's freezed.
-
 THERE ARE ONLY TWO SCENARIOS WHEN YOU ARE ALLOWED TO NOT USE `distill`:
 - Do not use `distill` if exact uncompressed output is required.
 - Do not use `distill` if it would break an interactive/TUI workflow.

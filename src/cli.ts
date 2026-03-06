@@ -51,10 +51,13 @@ async function run(): Promise<number> {
     throw new UsageError("stdin is required.");
   }
 
+  const progress = process.stderr.isTTY ? process.stderr : undefined;
   const session = new DistillSession({
     summarizer: createOllamaSummarizer(command.config),
     stdout: process.stdout,
-    isTTY: Boolean(process.stdout.isTTY)
+    isTTY: Boolean(process.stdout.isTTY),
+    progress,
+    progressIsTTY: Boolean(progress)
   });
 
   await new Promise<void>((resolve, reject) => {

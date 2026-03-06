@@ -3,6 +3,7 @@ import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import path from "node:path";
+import cliPackage from "../packages/cli/package.json";
 
 const root = path.resolve(import.meta.dir, "..");
 const cli = path.join(root, "src", "cli.ts");
@@ -25,7 +26,7 @@ describe("cli entrypoint", () => {
     });
 
     expect(result.status).toBe(0);
-    expect(result.stdout.trim()).toBe("0.1.0");
+    expect(result.stdout.trim()).toBe(cliPackage.version);
   });
 
   it("fails without stdin when attached to a tty", () => {

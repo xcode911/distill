@@ -1,4 +1,8 @@
-import { DEFAULT_IDLE_MS, DEFAULT_INTERACTIVE_GAP_MS } from "./config";
+import {
+  DEFAULT_IDLE_MS,
+  DEFAULT_INTERACTIVE_GAP_MS,
+  DEFAULT_KEEPALIVE_MS
+} from "./config";
 import type { Summarizer } from "./summarizer";
 import {
   ensureTrailingNewline,
@@ -21,16 +25,20 @@ export interface DistillSessionOptions {
   summarizer: Summarizer;
   stdout: Pick<NodeJS.WriteStream, "write">;
   isTTY: boolean;
+  progress?: Pick<NodeJS.WriteStream, "write">;
   idleMs?: number;
   interactiveGapMs?: number;
+  keepaliveMs?: number;
 }
 
 export class DistillSession {
   private readonly summarizer: Summarizer;
   private readonly stdout: Pick<NodeJS.WriteStream, "write">;
   private readonly isTTY: boolean;
+  private readonly progress: Pick<NodeJS.WriteStream, "write"> | null;
   private readonly idleMs: number;
   private readonly interactiveGapMs: number;
+  private readonly keepaliveMs: number;
   private readonly rawBuffers: Buffer[] = [];
   private readonly completedBursts: Burst[] = [];
   private currentBurstBuffers: Buffer[] = [];
@@ -38,18 +46,23 @@ export class DistillSession {
   private sawRedraw = false;
   private idleTimer: ReturnType<typeof setTimeout> | null = null;
   private interactiveTimer: ReturnType<typeof setTimeout> | null = null;
+  private keepaliveTimer: ReturnType<typeof setInterval> | null = null;
   private queue: Promise<void> = Promise.resolve();
   private nextBurstId = 1;
   private renderedPairs = new Set<string>();
   private emittedWatchOutput = false;
   private passthrough = false;
+  private keepaliveVisible = false;
 
   constructor(options: DistillSessionOptions) {
     this.summarizer = options.summarizer;
     this.stdout = options.stdout;
     this.isTTY = options.isTTY;
+    this.progress = options.progress ?? null;
     this.idleMs = options.idleMs ?? DEFAULT_IDLE_MS;
     this.interactiveGapMs = options.interactiveGapMs ?? DEFAULT_INTERACTIVE_GAP_MS;
+    this.keepaliveMs = options.keepaliveMs ?? DEFAULT_KEEPALIVE_MS;
+    this.startKeepalive();
   }
 
   push(chunk: Buffer): void {
@@ -77,6 +90,7 @@ export class DistillSession {
     this.clearTimers();
 
     if (this.passthrough) {
+      this.stopKeepalive(true);
       return;
     }
 
@@ -91,6 +105,7 @@ export class DistillSession {
     const rawInput = Buffer.concat(this.rawBuffers).toString("utf8");
 
     if (!rawInput) {
+      this.stopKeepalive(true);
       return;
     }
 
@@ -100,12 +115,15 @@ export class DistillSession {
       );
 
       if (looksLikeBadDistillation(rawInput, summary)) {
+        this.stopKeepalive(true);
         this.stdout.write(Buffer.concat(this.rawBuffers));
         return;
       }
 
+      this.stopKeepalive(true);
       this.stdout.write(ensureTrailingNewline(summary.trim()));
     } catch {
+      this.stopKeepalive(true);
       this.stdout.write(Buffer.concat(this.rawBuffers));
     }
   }
@@ -152,6 +170,7 @@ export class DistillSession {
       this.mode = "interactive";
       this.passthrough = true;
       this.clearTimers();
+      this.stopKeepalive(true);
       this.stdout.write(Buffer.concat(this.rawBuffers));
     }, this.interactiveGapMs);
   }
@@ -166,6 +185,36 @@ export class DistillSession {
       clearTimeout(this.interactiveTimer);
       this.interactiveTimer = null;
     }
+  }
+
+  private startKeepalive(): void {
+    if (!this.progress || this.keepaliveMs <= 0 || this.keepaliveTimer) {
+      return;
+    }
+
+    this.keepaliveTimer = setInterval(() => {
+      if (this.keepaliveTimer === null || this.mode === "watch" || this.passthrough) {
+        return;
+      }
+
+      this.progress!.write(".");
+      this.keepaliveVisible = true;
+    }, this.keepaliveMs);
+  }
+
+  private stopKeepalive(clearLine = false): void {
+    if (this.keepaliveTimer) {
+      clearInterval(this.keepaliveTimer);
+      this.keepaliveTimer = null;
+    }
+
+    if (!clearLine || !this.keepaliveVisible || !this.progress) {
+      return;
+    }
+
+    this.progress.write("\r\u001b[2K");
+
+    this.keepaliveVisible = false;
   }
 
   private closeCurrentBurst(): void {
@@ -208,6 +257,7 @@ export class DistillSession {
     this.mode = "watch";
     this.rawBuffers.length = 0;
     this.clearTimers();
+    this.stopKeepalive(true);
   }
 
   private scheduleLatestWatchRender(): void {
@@ -264,6 +314,7 @@ export class DistillSession {
   private renderWatchFallback(raw: string): void {
     this.mode = "interactive";
     this.passthrough = true;
+    this.stopKeepalive(true);
     this.stdout.write(raw);
   }
 

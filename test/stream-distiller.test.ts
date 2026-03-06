@@ -18,6 +18,18 @@ function createWriter() {
   };
 }
 
+function createDelayedSummarizer(delayMs: number, response: string) {
+  return {
+    async summarizeBatch() {
+      await sleep(delayMs);
+      return response;
+    },
+    async summarizeWatch() {
+      return "unused";
+    }
+  };
+}
+
 describe("DistillSession", () => {
   it("renders a batch summary", async () => {
     const writer = createWriter();
@@ -33,6 +45,46 @@ describe("DistillSession", () => {
     });
 
     session.push(Buffer.from("test output\n"));
+    await session.end();
+
+    expect(writer.read()).toBe("All tests passed\n");
+  });
+
+  it("emits keepalive dots and clears them before the final summary", async () => {
+    const writer = createWriter();
+    const progress = createWriter();
+    const session = new DistillSession({
+      stdout: writer,
+      progress,
+      isTTY: false,
+      idleMs: 10,
+      interactiveGapMs: 5,
+      keepaliveMs: 10,
+      summarizer: createDelayedSummarizer(50, "All tests passed")
+    });
+
+    session.push(Buffer.from("test output\n"));
+    await sleep(25);
+    await session.end();
+
+    expect(writer.read()).toBe("All tests passed\n");
+    expect(progress.read()).toContain(".");
+    expect(progress.read().endsWith("\r\u001b[2K")).toBe(true);
+  });
+
+  it("keeps output clean when progress keepalive is disabled", async () => {
+    const writer = createWriter();
+    const session = new DistillSession({
+      stdout: writer,
+      isTTY: false,
+      idleMs: 10,
+      interactiveGapMs: 5,
+      keepaliveMs: 10,
+      summarizer: createDelayedSummarizer(50, "All tests passed")
+    });
+
+    session.push(Buffer.from("test output\n"));
+    await sleep(25);
     await session.end();
 
     expect(writer.read()).toBe("All tests passed\n");
@@ -192,5 +244,31 @@ describe("DistillSession", () => {
     expect(writer.read()).toBe("batch summary\n");
     expect(batchCalls).toBe(1);
     expect(watchCalls).toBe(0);
+  });
+
+  it("clears keepalive output before switching to interactive passthrough", async () => {
+    const writer = createWriter();
+    const progress = createWriter();
+    const session = new DistillSession({
+      stdout: writer,
+      progress,
+      isTTY: false,
+      idleMs: 50,
+      interactiveGapMs: 12,
+      keepaliveMs: 10,
+      summarizer: {
+        summarizeBatch: async () => "never",
+        summarizeWatch: async () => "never"
+      }
+    });
+
+    session.push(Buffer.from("Continue? [y/N]"));
+    await sleep(35);
+    session.push(Buffer.from("\nyes\n"));
+    await session.end();
+
+    expect(writer.read()).toBe("Continue? [y/N]\nyes\n");
+    expect(progress.read()).toContain(".");
+    expect(progress.read().endsWith("\r\u001b[2K")).toBe(true);
   });
 });
