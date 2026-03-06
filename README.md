@@ -70,7 +70,7 @@ If you want Codex, Claude Code, or OpenCode to prefer `distill` whenever they ru
 rg -n "terminal|PERMISSION|permission|Permissions|Plan|full access|default" desktop --glob '!**/node_modules/**' | distill "find where terminal and permission UI are implemented in chat screen"
 ```
 
-**Saved ~98.7% tokens**
+- **Before:** [7648 tokens 30592 characters 10218 words](./examples/1/BEFORE.md)
+- **After:** [99 tokens 396 characters 57 words](./examples/1/AFTER.md)
 
-- [Before: 7648 tokens 30592 characters 10218 words](./examples/1/BEFORE.md)
-- [After: 99 tokens 396 characters 57 words](./examples/1/AFTER.md)
+**🔥 Saved ~98.7% tokens**
