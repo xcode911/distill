@@ -17,7 +17,8 @@
     "@samuelfaj/distill-darwin-arm64": "1.4.0",
     "@samuelfaj/distill-darwin-x64": "1.4.0",
     "@samuelfaj/distill-linux-arm64": "1.4.0",
-    "@samuelfaj/distill-linux-x64": "1.4.0"
+    "@samuelfaj/distill-linux-x64": "1.4.0",
+    "@samuelfaj/distill-win32-x64": "1.4.0"
   },
   "publishConfig": {
     "access": "public"

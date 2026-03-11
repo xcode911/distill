@@ -42,6 +42,8 @@ describe("user config", () => {
   });
 
   it("resolves config path from xdg or explicit path", () => {
+    const appData = "C:\\Users\\me\\AppData\\Roaming";
+
     expect(
       resolveConfigPath({
         DISTILL_CONFIG_PATH: "/tmp/custom-distill.json"
@@ -52,6 +54,12 @@ describe("user config", () => {
       resolveConfigPath({
         XDG_CONFIG_HOME: "/tmp/xdg"
       })
-    ).toBe("/tmp/xdg/distill/config.json");
+    ).toBe(path.join("/tmp/xdg", "distill", "config.json"));
+
+    expect(
+      resolveConfigPath({
+        APPDATA: appData
+      })
+    ).toBe(path.join(appData, "distill", "config.json"));
   });
 });

@@ -8,6 +8,7 @@ import cliPackage from "../packages/cli/package.json";
 const root = path.resolve(import.meta.dir, "..");
 const packDir = await mkdtemp(path.join(tmpdir(), "distill-pack-"));
 const installDir = await mkdtemp(path.join(tmpdir(), "distill-install-"));
+const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
 
 const currentPlatformPackage = (() => {
   const key = `${process.platform}-${process.arch}`;
@@ -15,7 +16,8 @@ const currentPlatformPackage = (() => {
     "darwin-arm64": "@samuelfaj/distill-darwin-arm64",
     "darwin-x64": "@samuelfaj/distill-darwin-x64",
     "linux-arm64": "@samuelfaj/distill-linux-arm64",
-    "linux-x64": "@samuelfaj/distill-linux-x64"
+    "linux-x64": "@samuelfaj/distill-linux-x64",
+    "win32-x64": "@samuelfaj/distill-win32-x64"
   };
 
   const value = mapping[key];
@@ -50,17 +52,26 @@ function runOrThrow(command: string, args: string[], cwd: string, env?: NodeJS.P
   return result.stdout.trim();
 }
 
+function resolveInstalledShimPath(installDir: string): string {
+  return path.join(
+    installDir,
+    "node_modules",
+    ".bin",
+    process.platform === "win32" ? "distill.cmd" : "distill"
+  );
+}
+
 try {
-  runOrThrow("npm", ["pack", "--workspace", currentPlatformPackage, "--pack-destination", packDir], root);
-  runOrThrow("npm", ["pack", "--workspace", "@samuelfaj/distill", "--pack-destination", packDir], root);
-  runOrThrow("npm", ["init", "-y"], installDir);
+  runOrThrow(npmCommand, ["pack", "--workspace", currentPlatformPackage, "--pack-destination", packDir], root);
+  runOrThrow(npmCommand, ["pack", "--workspace", "@samuelfaj/distill", "--pack-destination", packDir], root);
+  runOrThrow(npmCommand, ["init", "-y"], installDir);
 
   const tarballs = readdirSync(packDir)
     .sort()
     .map((entry) => path.join(packDir, entry));
-  runOrThrow("npm", ["install", ...tarballs], installDir);
+  runOrThrow(npmCommand, ["install", ...tarballs], installDir);
 
-  const shimPath = path.join(installDir, "node_modules", ".bin", "distill");
+  const shimPath = resolveInstalledShimPath(installDir);
   const versionOutput = runOrThrow(shimPath, ["--version"], installDir);
 
   if (versionOutput !== cliPackage.version) {
@@ -71,6 +82,7 @@ try {
     cwd: installDir,
     env: {
       ...process.env,
+      DISTILL_PROVIDER: "ollama",
       OLLAMA_HOST: "http://127.0.0.1:9"
     },
     encoding: "utf8",

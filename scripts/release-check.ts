@@ -3,20 +3,26 @@ import path from "node:path";
 
 const root = path.resolve(import.meta.dir, "..");
 const requirePublishMetadata = Bun.argv.includes("--publish");
+const currentPlatformKey = `${process.platform}-${process.arch}`;
 const workspacePackages = [
   "packages/cli/package.json",
   "packages/distill-darwin-arm64/package.json",
   "packages/distill-darwin-x64/package.json",
   "packages/distill-linux-arm64/package.json",
-  "packages/distill-linux-x64/package.json"
+  "packages/distill-linux-x64/package.json",
+  "packages/distill-win32-x64/package.json"
 ];
 
-const binaries = [
-  "packages/distill-darwin-arm64/bin/distill",
-  "packages/distill-darwin-x64/bin/distill",
-  "packages/distill-linux-arm64/bin/distill",
-  "packages/distill-linux-x64/bin/distill"
-];
+const binariesByPlatform: Record<string, string> = {
+  "darwin-arm64": "packages/distill-darwin-arm64/bin/distill",
+  "darwin-x64": "packages/distill-darwin-x64/bin/distill",
+  "linux-arm64": "packages/distill-linux-arm64/bin/distill",
+  "linux-x64": "packages/distill-linux-x64/bin/distill",
+  "win32-x64": "packages/distill-win32-x64/bin/distill.exe"
+};
+const binaries = requirePublishMetadata
+  ? Object.values(binariesByPlatform)
+  : [binariesByPlatform[currentPlatformKey]].filter(Boolean);
 
 const manifests = await Promise.all(
   workspacePackages.map(async (relativePath) => {
@@ -33,6 +39,10 @@ if (versions.size !== 1) {
 
 for (const binary of binaries) {
   await access(path.join(root, binary));
+}
+
+if (binaries.length === 0) {
+  throw new Error(`Unsupported platform for release check: ${currentPlatformKey}`);
 }
 
 const cliManifest = manifests[0];

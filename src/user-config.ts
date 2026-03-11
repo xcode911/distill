@@ -4,10 +4,27 @@ import path from "node:path";
 import type { ConfigKey, PersistedConfig } from "./config";
 
 function resolveConfigBaseDir(env: NodeJS.ProcessEnv): string {
+  const localAppData = env.LOCALAPPDATA?.trim();
+
+  if (localAppData) {
+    return path.join(localAppData, "distill");
+  }
+
+  const appData = env.APPDATA?.trim();
+
+  if (appData) {
+    return path.join(appData, "distill");
+  }
   const xdg = env.XDG_CONFIG_HOME?.trim();
 
   if (xdg) {
     return path.join(xdg, "distill");
+  }
+
+  const userProfile = env.USERPROFILE?.trim();
+
+  if (userProfile) {
+    return path.join(userProfile, "AppData", "Roaming", "distill");
   }
 
   const home = env.HOME?.trim();

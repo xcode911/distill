@@ -1,0 +1,11 @@
+{
+  "name": "@samuelfaj/distill-win32-x64",
+  "version": "1.4.0",
+  "license": "MIT",
+  "files": [
+    "bin/distill.exe"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

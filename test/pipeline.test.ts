@@ -4,8 +4,9 @@ import path from "node:path";
 
 const root = path.resolve(import.meta.dir, "..");
 const cli = path.join(root, "src", "cli.ts");
+const describeUnixOnly = process.platform === "win32" ? describe.skip : describe;
 
-describe("pipeline exit behavior", () => {
+describeUnixOnly("pipeline exit behavior", () => {
   it("mirrors the upstream exit with pipefail", () => {
     const result = spawnSync(
       "bash",

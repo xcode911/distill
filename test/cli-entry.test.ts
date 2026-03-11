@@ -7,6 +7,7 @@ import cliPackage from "../packages/cli/package.json";
 
 const root = path.resolve(import.meta.dir, "..");
 const cli = path.join(root, "src", "cli.ts");
+const itUnixOnly = process.platform === "win32" ? it.skip : it;
 
 describe("cli entrypoint", () => {
   it("prints help", () => {
@@ -29,7 +30,7 @@ describe("cli entrypoint", () => {
     expect(result.stdout.trim()).toBe(cliPackage.version);
   });
 
-  it("fails without stdin when attached to a tty", () => {
+  itUnixOnly("fails without stdin when attached to a tty", () => {
     const result = spawnSync(
       "script",
       ["-q", "/dev/null", "bun", "run", cli, "is this safe?"],

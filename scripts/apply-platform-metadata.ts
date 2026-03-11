@@ -22,6 +22,11 @@ const targets = [
     packagePath: "packages/distill-linux-x64/package.json",
     os: ["linux"],
     cpu: ["x64"]
+  },
+  {
+    packagePath: "packages/distill-win32-x64/package.json",
+    os: ["win32"],
+    cpu: ["x64"]
   }
 ] as const;
 

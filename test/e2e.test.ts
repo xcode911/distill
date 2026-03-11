@@ -12,21 +12,24 @@ import { spawn, spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
-setDefaultTimeout(60_000);
+setDefaultTimeout(process.platform === "win32" ? 120_000 : 60_000);
 
 const root = path.resolve(import.meta.dir, "..");
 const launcher = path.join(root, "packages", "cli", "bin", "distill.js");
-const expectedVersion = "1.4.0";
+const expectedVersion = cliPackage.version;
 const WATCH_IDLE_MS = 1_800;
 const WATCH_START_DELAY_MS = 600;
 const INTERACTIVE_DELAY_MS = 1_000;
+const itUnixOnly = process.platform === "win32" ? it.skip : it;
+const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
 const currentPlatformPackage = (() => {
   const key = `${process.platform}-${process.arch}`;
   const mapping: Record<string, string> = {
     "darwin-arm64": "@samuelfaj/distill-darwin-arm64",
     "darwin-x64": "@samuelfaj/distill-darwin-x64",
     "linux-arm64": "@samuelfaj/distill-linux-arm64",
-    "linux-x64": "@samuelfaj/distill-linux-x64"
+    "linux-x64": "@samuelfaj/distill-linux-x64",
+    "win32-x64": "@samuelfaj/distill-win32-x64"
   };
 
   const value = mapping[key];
@@ -37,6 +40,33 @@ const currentPlatformPackage = (() => {
 
   return value;
 })();
+
+function createOllamaEnv(host: string, env?: NodeJS.ProcessEnv): NodeJS.ProcessEnv {
+  return {
+    ...env,
+    DISTILL_PROVIDER: "ollama",
+    OLLAMA_HOST: host
+  };
+}
+
+function resolveInstalledShimPath(installDir: string): string {
+  return path.join(
+    installDir,
+    "node_modules",
+    ".bin",
+    process.platform === "win32" ? "distill.cmd" : "distill"
+  );
+}
+
+function resolveInstalledBinaryPath(installDir: string): string {
+  return path.join(
+    installDir,
+    "node_modules",
+    ...currentPlatformPackage.split("/"),
+    "bin",
+    process.platform === "win32" ? "distill.exe" : "distill"
+  );
+}
 
 interface InputStep {
   afterMs?: number;
@@ -84,16 +114,21 @@ function runOrThrow(
   return result.stdout.trim();
 }
 
-async function runLauncher(args: string[], options?: {
-  env?: NodeJS.ProcessEnv;
-  inputSteps?: InputStep[];
-  finalDelayMs?: number;
-}): Promise<RunResult> {
-  const child = spawn("node", [launcher, ...args], {
-    cwd: root,
+async function runProcess(
+  command: string,
+  args: string[],
+  options: {
+    cwd: string;
+    env?: NodeJS.ProcessEnv;
+    inputSteps?: InputStep[];
+    finalDelayMs?: number;
+  }
+): Promise<RunResult> {
+  const child = spawn(command, args, {
+    cwd: options.cwd,
     env: {
       ...process.env,
-      ...options?.env
+      ...options.env
     },
     stdio: ["pipe", "pipe", "pipe"]
   });
@@ -110,7 +145,7 @@ async function runLauncher(args: string[], options?: {
   });
 
   const writer = (async () => {
-    for (const step of options?.inputSteps ?? []) {
+    for (const step of options.inputSteps ?? []) {
       await delay(step.afterMs ?? 0);
 
       if (!child.stdin.destroyed && !child.killed) {
@@ -118,7 +153,7 @@ async function runLauncher(args: string[], options?: {
       }
     }
 
-    await delay(options?.finalDelayMs ?? 0);
+    await delay(options.finalDelayMs ?? 0);
 
     if (!child.stdin.destroyed && !child.killed) {
       child.stdin.end();
@@ -128,17 +163,25 @@ async function runLauncher(args: string[], options?: {
   const exit = new Promise<RunResult>((resolve, reject) => {
     child.on("error", reject);
     child.on("close", (code, signal) => {
-      resolve({
-        code,
-        signal,
-        stdout,
-        stderr
-      });
+      resolve({ code, signal, stdout, stderr });
     });
   });
 
   await writer;
   return exit;
+}
+
+async function runLauncher(args: string[], options?: {
+  env?: NodeJS.ProcessEnv;
+  inputSteps?: InputStep[];
+  finalDelayMs?: number;
+}): Promise<RunResult> {
+  return runProcess("node", [launcher, ...args], {
+    cwd: root,
+    env: options?.env,
+    inputSteps: options?.inputSteps,
+    finalDelayMs: options?.finalDelayMs
+  });
 }
 
 async function createFakeOllama(
@@ -182,7 +225,7 @@ function normalizePtyOutput(output: string): string {
 }
 
 beforeAll(() => {
-  runOrThrow("npm", ["run", "build"], root);
+  runOrThrow(npmCommand, ["run", "build"], root);
 });
 
 describe("distill end-to-end", () => {
@@ -195,9 +238,7 @@ describe("distill end-to-end", () => {
 
     try {
       const result = await runLauncher(["did the tests pass?"], {
-        env: {
-          OLLAMA_HOST: fake.host
-        },
+        env: createOllamaEnv(fake.host),
         inputSteps: [{ data: "Ran 12 tests\n12 passed\n" }]
       });
 
@@ -215,7 +256,7 @@ describe("distill end-to-end", () => {
     }
   });
 
-  it("keeps the spinner moving in a pty while collecting streamed input and summarizing", async () => {
+  itUnixOnly("keeps the spinner moving in a pty while collecting streamed input and summarizing", async () => {
     const fake = await createFakeOllama(async (_body, _index) => {
       await delay(700);
       return new Response(JSON.stringify({ response: "All tests passed." }), {
@@ -233,9 +274,7 @@ describe("distill end-to-end", () => {
         "script",
         ["-q", capturePath, "zsh", "-lc", shellCommand],
         root,
-        {
-          OLLAMA_HOST: fake.host
-        }
+        createOllamaEnv(fake.host)
       );
 
       const output = normalizePtyOutput(await readFile(capturePath, "utf8"));
@@ -284,9 +323,7 @@ describe("distill end-to-end", () => {
 
     try {
       const result = await runLauncher(["what changed?"], {
-        env: {
-          OLLAMA_HOST: fake.host
-        },
+        env: createOllamaEnv(fake.host),
         inputSteps: [
           { afterMs: WATCH_START_DELAY_MS, data: "watch run\r\nfailures: 0\n" },
           { afterMs: WATCH_IDLE_MS, data: "watch run\nfailures: 1\n" }
@@ -313,9 +350,7 @@ describe("distill end-to-end", () => {
 
     try {
       const result = await runLauncher(["confirm the action"], {
-        env: {
-          OLLAMA_HOST: fake.host
-        },
+        env: createOllamaEnv(fake.host),
         inputSteps: [
           { data: "Continue? [y/N]" },
           { afterMs: INTERACTIVE_DELAY_MS, data: "\ny\n" }
@@ -343,47 +378,47 @@ describe("distill end-to-end", () => {
 
     try {
       runOrThrow(
-        "npm",
+        npmCommand,
         ["pack", "--workspace", currentPlatformPackage, "--pack-destination", packDir],
         root
       );
       runOrThrow(
-        "npm",
+        npmCommand,
         ["pack", "--workspace", "@samuelfaj/distill", "--pack-destination", packDir],
         root
       );
-      runOrThrow("npm", ["init", "-y"], installDir);
+      runOrThrow(npmCommand, ["init", "-y"], installDir);
 
       const tarballs = readdirSync(packDir)
         .sort()
         .map((entry) => path.join(packDir, entry));
-      runOrThrow("npm", ["install", ...tarballs], installDir);
+      runOrThrow(npmCommand, ["install", ...tarballs], installDir);
 
-      const version = runOrThrow(
-        path.join(installDir, "node_modules", ".bin", "distill"),
-        ["--version"],
-        installDir
-      );
-      expect(version).toBe(expectedVersion);
+      const installedShim = resolveInstalledShimPath(installDir);
+      const version = await runProcess(installedShim, ["--version"], {
+        cwd: installDir
+      });
+      expect(version.code).toBe(0);
+      expect(version.stderr).toBe("");
+      expect(version.stdout.trim()).toBe(expectedVersion);
 
-      const summary = runOrThrow(
-        path.join(installDir, "node_modules", ".bin", "distill"),
-        ["did the tests pass?"],
-        installDir,
-        {
-          OLLAMA_HOST: fake.host
-        },
-        "12 passed\n"
-      );
+      const installedBinary = resolveInstalledBinaryPath(installDir);
+      const summary = await runProcess(installedBinary, ["did the tests pass?"], {
+        cwd: installDir,
+        env: createOllamaEnv(fake.host),
+        inputSteps: [{ data: "12 passed\n" }]
+      });
 
-      expect(summary).toBe("Tests passed.");
+      expect(summary.code).toBe(0);
+      expect(summary.stderr).toBe("");
+      expect(summary.stdout.trim()).toBe("Tests passed.");
       expect(fake.requests).toHaveLength(1);
     } finally {
       fake.stop();
       await rm(packDir, { recursive: true, force: true });
       await rm(installDir, { recursive: true, force: true });
     }
-  });
+  }, process.platform === "win32" ? 300_000 : undefined);
 
   it("persists model and thinking config through the launcher", async () => {
     const fake = await createFakeOllama((_body, _index) =>
@@ -410,6 +445,7 @@ describe("distill end-to-end", () => {
       const result = await runLauncher(["summarize"], {
         env: {
           DISTILL_CONFIG_PATH: configPath,
+          DISTILL_PROVIDER: "ollama",
           OLLAMA_HOST: fake.host
         },
         inputSteps: [{ data: "all good\n" }]

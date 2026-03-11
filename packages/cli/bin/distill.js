@@ -1,23 +1,40 @@
 #!/usr/bin/env node
 
 const { spawn } = require("node:child_process");
+const fs = require("node:fs");
 const path = require("node:path");
 const { createRequire } = require("node:module");
 
 const requireFromHere = createRequire(__filename);
 
 const PACKAGE_BY_TARGET = {
-  "darwin-arm64": "@samuelfaj/distill-darwin-arm64",
-  "darwin-x64": "@samuelfaj/distill-darwin-x64",
-  "linux-arm64": "@samuelfaj/distill-linux-arm64",
-  "linux-x64": "@samuelfaj/distill-linux-x64"
+  "darwin-arm64": {
+    packageName: "@samuelfaj/distill-darwin-arm64",
+    binaryName: "distill"
+  },
+  "darwin-x64": {
+    packageName: "@samuelfaj/distill-darwin-x64",
+    binaryName: "distill"
+  },
+  "linux-arm64": {
+    packageName: "@samuelfaj/distill-linux-arm64",
+    binaryName: "distill"
+  },
+  "linux-x64": {
+    packageName: "@samuelfaj/distill-linux-x64",
+    binaryName: "distill"
+  },
+  "win32-x64": {
+    packageName: "@samuelfaj/distill-win32-x64",
+    binaryName: "distill.exe"
+  }
 };
 
 function resolveBinaryPath() {
   const target = `${process.platform}-${process.arch}`;
-  const packageName = PACKAGE_BY_TARGET[target];
+  const targetSpec = PACKAGE_BY_TARGET[target];
 
-  if (!packageName) {
+  if (!targetSpec) {
     console.error(
       `[distill] Unsupported platform: ${process.platform}/${process.arch}.`
     );
@@ -25,11 +42,24 @@ function resolveBinaryPath() {
   }
 
   try {
-    const packageJsonPath = requireFromHere.resolve(`${packageName}/package.json`);
-    return path.join(path.dirname(packageJsonPath), "bin", "distill");
+    const packageJsonPath = requireFromHere.resolve(`${targetSpec.packageName}/package.json`);
+    return path.join(path.dirname(packageJsonPath), "bin", targetSpec.binaryName);
   } catch (error) {
+    const workspaceBinaryPath = path.resolve(
+      __dirname,
+      "..",
+      "..",
+      `distill-${target}`,
+      "bin",
+      targetSpec.binaryName
+    );
+
+    if (fs.existsSync(workspaceBinaryPath)) {
+      return workspaceBinaryPath;
+    }
+
     console.error(
-      `[distill] Missing platform package ${packageName}. Reinstall @samuelfaj/distill for this platform.`
+      `[distill] Missing platform package ${targetSpec.packageName}. Reinstall @samuelfaj/distill for this platform.`
     );
     process.exit(1);
   }
