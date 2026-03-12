@@ -12,6 +12,7 @@ import { spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import cliPackage from "../packages/cli/package.json";
+import { createScriptCommand } from "./script-command";
 
 const root = path.resolve(import.meta.dir, "..");
 const cli = path.join(root, "src", "cli.ts");
@@ -57,17 +58,18 @@ describe("cli entrypoint", () => {
   });
 
   itUnixOnly("fails without stdin when attached to a tty", () => {
-    const result = spawnSync(
-      "script",
-      ["-q", "/dev/null", "bun", "run", cli, "is this safe?"],
-      {
-        cwd: root,
-        encoding: "utf8"
-      }
-    );
+    const scriptCommand = createScriptCommand("/dev/null", "bun", [
+      "run",
+      cli,
+      "is this safe?"
+    ]);
+    const result = spawnSync(scriptCommand.command, scriptCommand.args, {
+      cwd: root,
+      encoding: "utf8"
+    });
 
     expect(result.status).toBe(2);
-    expect(result.stdout).toContain("stdin is required.");
+    expect(`${result.stdout}${result.stderr}`).toContain("stdin is required.");
   });
 
   it("persists config commands", async () => {

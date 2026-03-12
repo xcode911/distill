@@ -12,6 +12,7 @@ import { spawn, spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { getCurrentPlatformKey, getPlatformTarget } from "../scripts/platform-targets";
+import { createScriptCommand } from "./script-command";
 
 setDefaultTimeout(process.platform === "win32" ? 120_000 : 60_000);
 
@@ -276,11 +277,12 @@ describe("distill end-to-end", () => {
     const shellCommand =
       "perl -e '$|=1; for (1..8) { print qq(Ran chunk $_\\n); select undef,undef,undef,0.18; }' | " +
       `node ${launcher} 'did the tests pass?'`;
+    const scriptCommand = createScriptCommand(capturePath, "zsh", ["-lc", shellCommand]);
 
     try {
       runOrThrow(
-        "script",
-        ["-q", capturePath, "zsh", "-lc", shellCommand],
+        scriptCommand.command,
+        scriptCommand.args,
         root,
         createOllamaEnv(fake.host)
       );
