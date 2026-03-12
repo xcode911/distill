@@ -99,6 +99,25 @@ function delay(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function resolveUnixShell(): string {
+  const candidates = [process.env.SHELL, "zsh", "bash", "sh"].filter(
+    (value): value is string => Boolean(value)
+  );
+  const uniqueCandidates = [...new Set(candidates)];
+
+  for (const candidate of uniqueCandidates) {
+    const result = spawnSync(candidate, ["-lc", "exit 0"], {
+      stdio: "ignore"
+    });
+
+    if (!result.error && result.status === 0) {
+      return candidate;
+    }
+  }
+
+  throw new Error("Unable to find a usable Unix shell for the pty test.");
+}
+
 function runOrThrow(
   command: string,
   args: string[],
@@ -277,7 +296,10 @@ describe("distill end-to-end", () => {
     const shellCommand =
       "perl -e '$|=1; for (1..8) { print qq(Ran chunk $_\\n); select undef,undef,undef,0.18; }' | " +
       `node ${launcher} 'did the tests pass?'`;
-    const scriptCommand = createScriptCommand(capturePath, "zsh", ["-lc", shellCommand]);
+    const scriptCommand = createScriptCommand(capturePath, resolveUnixShell(), [
+      "-lc",
+      shellCommand
+    ]);
 
     try {
       runOrThrow(
