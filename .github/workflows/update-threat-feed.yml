@@ -1,0 +1,72 @@
+name: Update verified threat feed
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 * * * *'
+
+permissions:
+  contents: write
+
+jobs:
+  radar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fetch Cloudflare Radar L7 attack pairs
+        env:
+          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          test -n "$CF_TOKEN"
+          curl -fsSL \
+            -H "Authorization: Bearer $CF_TOKEN" \
+            'https://api.cloudflare.com/client/v4/radar/attacks/layer7/top/attacks?limit=20&dateRange=1d&format=json' \
+            -o /tmp/radar.json
+
+      - name: Build site feed
+        run: |
+          python - <<'PY'
+          import json, datetime
+          from pathlib import Path
+          raw=json.loads(Path('/tmp/radar.json').read_text())
+          rows=raw.get('result',{}).get('top_0',[])
+          incidents=[]
+          for i,row in enumerate(rows,1):
+              src=row.get('originCountryAlpha2')
+              dst=row.get('targetCountryAlpha2')
+              if not src or not dst:
+                  continue
+              incidents.append({
+                  'id': i,
+                  'type': 'l7',
+                  'tag': 'L7 / mitigated',
+                  'name': 'Cloudflare Radar L7 attack pair',
+                  'from': row.get('originCountryName',src),
+                  'to': row.get('targetCountryName',dst),
+                  'fromCode': src,
+                  'toCode': dst,
+                  'share': row.get('value'),
+                  'rank': row.get('rank',i),
+                  'time': 'آخر 24 ساعة'
+              })
+          out={
+              'source':'Cloudflare Radar',
+              'updatedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),
+              'incidents':incidents
+          }
+          p=Path('docs/data/incidents.json')
+          p.parent.mkdir(parents=True,exist_ok=True)
+          p.write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          PY
+
+      - name: Commit feed
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/data/incidents.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'chore: update verified threat feed'
+          git push
