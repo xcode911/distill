@@ -8,50 +8,23 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
-<header class="topbar">
-  <a class="brand" href="#top"><b>CTF</b>//PULSE <span>V2</span></a>
-  <nav><a href="#overview">الرئيسية</a><a href="#ctf">CTF</a><a href="#osint">OSINT</a><a href="#intel">Intel</a></nav>
-  <div class="top-actions"><button id="themeBtn" class="icon-btn">◐</button><a class="login" href="#ctf">ابدأ الآن ↗</a></div>
-</header>
+<header class="topbar"><a class="brand" href="#top"><b>CTF</b>//PULSE <span>V2</span></a><nav><a href="#overview">الرئيسية</a><a href="#ctf">CTF</a><a href="#osint">OSINT</a><a href="#intel">Intel</a></nav><div class="top-actions"><button id="themeBtn" class="icon-btn">◐</button><a class="login" href="#ctf">ابدأ الآن ↗</a></div></header>
 <main id="top">
-<section id="overview" class="hero">
-  <div><div class="eyebrow">PUBLIC CYBER INTELLIGENCE / CTF TOOLKIT</div><h1>لوحة واحدة.<br><span>أدوات حقيقية.</span></h1><p>نسخة جديدة من CTF//PULSE بهيكل أبسط: بيانات CTFtime تُحدَّث تلقائيًا عبر GitHub Actions، وأدوات OSINT تعمل محليًا قدر الإمكان.</p><div class="hero-actions"><a class="primary" href="#ctf">🚩 استكشف CTF</a><a class="ghost" href="#osint">🔎 افتح OSINT</a></div></div>
-  <div class="terminal-card"><div class="term-head"><span>pulse@intel:~$</span><i></i></div><pre>core.engine      <b>ONLINE</b>
+<section id="overview" class="hero"><div><div class="eyebrow">PUBLIC CYBER INTELLIGENCE / CTF TOOLKIT</div><h1>لوحة واحدة.<br><span>أدوات حقيقية.</span></h1><p>نسخة جديدة من CTF//PULSE بهيكل أبسط: بيانات CTFtime تُحدَّث تلقائيًا عبر GitHub Actions، وأدوات OSINT تعمل محليًا قدر الإمكان.</p><div class="hero-actions"><a class="primary" href="#ctf">🚩 استكشف CTF</a><a class="ghost" href="#osint">🔎 افتح OSINT</a></div></div><div class="terminal-card"><div class="term-head"><span>pulse@intel:~$</span><i></i></div><pre>core.engine      <b>ONLINE</b>
 ctftime.feed     <b>SYNCED</b>
 osint.engine     <b>READY</b>
 privacy.mode     <b>LOCAL-FIRST</b>
-&lt; evidence &gt;     <b>FIRST</b></pre></div>
-</section>
+&lt; evidence &gt;     <b>FIRST</b></pre></div></section>
 <section class="statusbar"><span>STATUS</span><b id="statusText">تحميل البيانات…</b><small id="syncText">—</small></section>
-
-<section id="ctf" class="panel">
- <div class="section-head"><div><div class="eyebrow">CTFTIME / TEAM INTELLIGENCE</div><h2>فرق ونتائج CTF</h2><p>القائمة تُقرأ من ملف ثابت يتم تحديثه تلقائيًا في المستودع بدل الاتصال المباشر من المتصفح.</p></div><span class="live-pill">PUBLIC</span></div>
- <div class="ctf-tools"><input id="teamSearch" placeholder="ابحث عن فريق"><select id="sortTeams"><option value="rank">الترتيب</option><option value="score">النقاط</option><option value="name">الاسم</option></select><button id="reloadTeams" class="filter">↻ تحديث</button></div>
- <div class="ctf-grid"><div class="stats"><div><small>الفرق المحملة</small><b id="teamCount">—</b></div><div><small>المصدر</small><b>CTFtime</b></div><div><small>آخر مزامنة</small><b id="teamUpdated">—</b></div></div><div id="teamList" class="team-list"></div></div>
-</section>
-
-<section id="osint" class="panel">
- <div class="section-head"><div><div class="eyebrow">OSINT//LOCATE</div><h2>تحليل صورة بدون مفاتيح مكشوفة</h2><p>يعرض EXIF/GPS محليًا، ثم يضع الإحداثيات على الخريطة عند توفرها. تحليل AI يحتاج Backend منفصل.</p></div><span class="live-pill">LOCAL-FIRST</span></div>
- <label id="dropzone" class="dropzone"><input id="imageInput" type="file" accept="image/jpeg,image/png,image/webp"><strong>ارفع صورة شارع / مكان</strong><span>JPG · PNG · WEBP</span></label>
- <div class="osint-actions"><button id="clearOsint" class="filter">مسح</button><span id="osintStatus" class="feed-status">WAITING</span></div>
- <div id="osintResult" class="osint-result hidden"><div class="preview"><img id="preview" alt="معاينة الصورة"></div><div class="evidence"><h3>Evidence</h3><div id="exifGrid" class="evidence-grid"></div><div id="locationText" class="location-box">لم يتم العثور على GPS.</div><div id="osintMap" class="osint-map"></div></div></div>
-</section>
-
-<section id="intel" class="panel">
- <div class="section-head"><div><div class="eyebrow">INTELLIGENCE</div><h2>أدوات تدريب سريعة</h2></div><span class="live-pill">NO FAKE DATA</span></div>
- <div class="tool-grid">
-  <article><b>⏱</b><h3>تقدير وقت الـFlag</h3><label>عدد التحديات<input id="challengeCount" type="number" min="1" max="100" value="5"></label><label>المستوى<select id="challengeLevel"><option value="easy">سهل</option><option value="medium" selected>متوسط</option><option value="hard">صعب</option><option value="mixed">مختلط</option></select></label><button id="calcTime" class="filter">احسب</button><strong id="timeOut">—</strong></article>
-  <article><b>🧮</b><h3>حاسبة النقاط</h3><label>عدد الحلول<input id="solveCount" type="number" min="0" value="0"></label><label>نقاط الحل<input id="solvePoints" type="number" min="0" value="100"></label><button id="calcPoints" class="filter">احسب</button><strong id="pointsOut">0 pts</strong></article>
-  <article><b>📦</b><h3>تصدير</h3><p>صدّر الملخص الحالي إلى JSON.</p><button id="exportData" class="filter">تصدير JSON</button></article>
-  <article><b>⌨</b><h3>اختصارات</h3><p>M = CTF · O = OSINT · I = Intel · T = Theme</p></article>
- </div>
-</section>
-
+<section id="ctf" class="panel"><div class="section-head"><div><div class="eyebrow">CTFTIME / TEAM INTELLIGENCE</div><h2>فرق ونتائج CTF</h2><p>القائمة تُقرأ من ملف ثابت يتم تحديثه تلقائيًا في المستودع بدل الاتصال المباشر من المتصفح.</p></div><span class="live-pill">PUBLIC</span></div><div class="ctf-tools"><input id="teamSearch" placeholder="ابحث عن فريق"><select id="sortTeams"><option value="rank">الترتيب</option><option value="score">النقاط</option><option value="name">الاسم</option></select><button id="reloadTeams" class="filter">↻ تحديث</button></div><div class="ctf-grid"><div class="stats"><div><small>الفرق المحملة</small><b id="teamCount">—</b></div><div><small>المصدر</small><b>CTFtime</b></div><div><small>آخر مزامنة</small><b id="teamUpdated">—</b></div></div><div id="teamList" class="team-list"></div></div></section>
+<section id="map" class="panel"><div class="section-head"><div><div class="eyebrow">GLOBAL THREAT MAP</div><h2>الخريطة السيبرانية</h2><p>خطوط المصدر ← الهدف من بيانات عامة مجمعة فقط.</p></div><span class="live-pill">PUBLIC TELEMETRY</span></div><div class="ctf-tools"><button class="filter active" data-filter="all">الكل</button><button class="filter" data-filter="l7">L7</button><button class="filter" data-filter="ddos">DDoS</button><button class="filter" data-filter="network">Network</button></div><div class="ctf-grid"><div class="stats"><div><small>السجلات</small><b id="sThreat">—</b></div><div><small>الدول</small><b id="sCountries">—</b></div><div><small>المصدر</small><b id="source">—</b></div><div><small>آخر مزامنة</small><b id="lastSync">—</b></div></div><div><div id="worldMap" style="height:520px;border:1px solid var(--line);border-radius:10px;overflow:hidden"></div><div id="incidentList" class="team-list"></div></div></div></section>
+<section id="osint" class="panel"><div class="section-head"><div><div class="eyebrow">OSINT//LOCATE</div><h2>تحليل صورة بدون مفاتيح مكشوفة</h2><p>يعرض EXIF/GPS محليًا، ثم يضع الإحداثيات على الخريطة عند توفرها. تحليل AI يحتاج Backend منفصل.</p></div><span class="live-pill">LOCAL-FIRST</span></div><label id="dropzone" class="dropzone"><input id="imageInput" type="file" accept="image/jpeg,image/png,image/webp"><strong>ارفع صورة شارع / مكان</strong><span>JPG · PNG · WEBP</span></label><div class="osint-actions"><button id="clearOsint" class="filter">مسح</button><span id="osintStatus" class="feed-status">WAITING</span></div><div id="osintResult" class="osint-result hidden"><div class="preview"><img id="preview" alt="معاينة الصورة"></div><div class="evidence"><h3>Evidence</h3><div id="exifGrid" class="evidence-grid"></div><div id="locationText" class="location-box">لم يتم العثور على GPS.</div><div id="osintMap" class="osint-map"></div></div></div></section>
+<section id="intel" class="panel"><div class="section-head"><div><div class="eyebrow">INTELLIGENCE</div><h2>أدوات تدريب سريعة</h2></div><span class="live-pill">NO FAKE DATA</span></div><div class="tool-grid"><article><b>⏱</b><h3>تقدير وقت الـFlag</h3><label>عدد التحديات<input id="challengeCount" type="number" min="1" max="100" value="5"></label><label>المستوى<select id="challengeLevel"><option value="easy">سهل</option><option value="medium" selected>متوسط</option><option value="hard">صعب</option><option value="mixed">مختلط</option></select></label><button id="calcTime" class="filter">احسب</button><strong id="timeOut">—</strong></article><article><b>🧮</b><h3>حاسبة النقاط</h3><label>عدد الحلول<input id="solveCount" type="number" min="0" value="0"></label><label>نقاط الحل<input id="solvePoints" type="number" min="0" value="100"></label><button id="calcPoints" class="filter">احسب</button><strong id="pointsOut">0 pts</strong></article><article><b>📦</b><h3>تصدير</h3><p>صدّر الملخص الحالي إلى JSON.</p><button id="exportData" class="filter">تصدير JSON</button></article><article><b>⌨</b><h3>اختصارات</h3><p>M = CTF · O = OSINT · I = Intel · T = Theme</p></article></div></section>
+<section class="panel"><div class="section-head"><div><div class="eyebrow">INTELLIGENCE FEED</div><h2>الثغرات المستغلة</h2></div><span class="live-pill">CISA KEV</span></div><div class="ctf-tools"><input id="kevSearch" placeholder="ابحث CVE أو اسم الثغرة"></div><div id="kevList" class="team-list"></div><div class="stats" style="margin-top:10px"><div><small>KEV محمّلة</small><b id="kevCount">—</b></div></div></section>
 <footer><span>CTF//PULSE V2</span> · Public-source cybersecurity dashboard · <a href="#top">↑</a></footer>
-</main>
-<script src="app.js?v=2"></script>
-</body>
-</html>
+</main><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script src="app.js?v=2"></script>
+</body></html>
