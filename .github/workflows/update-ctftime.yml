@@ -1,0 +1,41 @@
+name: Update CTFtime cache
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 * * * *'
+
+permissions:
+  contents: write
+
+jobs:
+  ctftime:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch public CTFtime team rankings
+        run: |
+          set -euo pipefail
+          curl -fsSL 'https://ctftime.org/stats/' -o /tmp/stats.html
+          python - <<'PY'
+          import re, json, datetime
+          from pathlib import Path
+          html=Path('/tmp/stats.html').read_text(errors='ignore')
+          teams=[]
+          for m in re.finditer(r'<tr[^>]*>\s*<td[^>]*>(\d+)</td>\s*<td[^>]*>.*?<a[^>]*href="/team/(\d+)/"[^>]*>(.*?)</a>.*?</tr>',html,re.S|re.I):
+              rank,tid,name=m.groups()
+              name=re.sub(r'<[^>]+>','',name).strip()
+              teams.append({'rank':int(rank),'team_id':int(tid),'team_name':name})
+          teams=teams[:100]
+          out={'source':'CTFtime','updatedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'teams':teams}
+          p=Path('docs/data/ctftime.json');p.parent.mkdir(parents=True,exist_ok=True)
+          p.write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          PY
+      - name: Commit cache
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/data/ctftime.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'chore: update CTFtime cache'
+          git push
