@@ -1,5 +1,67 @@
-<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CTF//PULSE</title><link rel="stylesheet" href="style.css"></head><body><header><div class="brand"><b>CTF</b>//PULSE</div><div class="live">● LIVE INTELLIGENCE</div></header><main><section class="hero"><div><small>CYBERSECURITY • CTF • INTELLIGENCE</small><h1>نبض عالم الـCTF<br><span>في مكان واحد.</span></h1><p>ترتيبات فرق CTF، الأحداث القادمة، وأبرز أخبار الأمن السيبراني في لوحة واحدة.</p></div><pre>$ ctf-pulse --status
-> feeds: online
-> ranking: synced
-> intelligence: active
-> mode: public</pre></section><section class="grid"><article><h2>🏆 أفضل فرق CTF</h2><div id="teams"></div></article><article><h2>⚡ الأحداث</h2><div id="events"></div></article><article class="wide"><h2>📰 أبرز أخبار الأمن السيبراني</h2><div id="news"></div></article><article><h2>📊 الإحصائيات</h2><div class="stats"><b id="tc">—</b><b id="ec">—</b><b id="nc">—</b></div><div class="labels"><span>فرق</span><span>أحداث</span><span>أخبار</span></div></article></section></main><footer>CTF//PULSE — معلومات عامة ومصادر موثوقة</footer><script src="app.js"></script></body></html>
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="CTF//PULSE — استخبارات CTF وأمن سيبراني وOSINT.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' https://unpkg.com; connect-src 'self' https:; frame-src https://accounts.google.com; object-src 'none'; base-uri 'self'; form-action 'self';">
+  <title>CTF//PULSE — Cyber Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIINfQ3H4L3Yw9J6kR1fQ2h7u0f3X5w5h6M=" crossorigin="">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="#top" aria-label="CTF PULSE"><b>CTF</b>//PULSE</a>
+  <nav>
+    <a href="#map">الخريطة</a><a href="#osint">OSINT</a><a href="#news">الأخبار</a><a href="#ctf">CTF</a>
+  </nav>
+  <button id="loginBtn" class="login">تسجيل الدخول <span>↗</span></button>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="hero-copy">
+      <div class="eyebrow"><i></i> CYBER INTELLIGENCE / LIVE BOARD</div>
+      <h1>الضجيج السيبراني،<br><span>مرتب في مكان واحد.</span></h1>
+      <p>خريطة للحوادث المنشورة، أخبار الأمن، فعاليات CTF وأدوات OSINT — بواجهة هادئة تشبه لوحة عمليات حقيقية، بدون استعراض.</p>
+      <div class="hero-actions"><a class="primary" href="#map">افتح الخريطة</a><a class="ghost" href="#osint">جرّب OSINT//LOCATE</a></div>
+    </div>
+    <div class="terminal-card"><div class="term-head"><span>pulse@intel:~$</span><span class="dot"></span></div><pre>feed.status       <b>ONLINE</b>
+incident.index    <b>SYNCED</b>
+osint.engine      <b>READY</b>
+account.security  <b>HTTPS</b>
+
+&gt; monitoring public sources…</pre></div>
+  </section>
+
+  <section class="ticker"><span>TODAY</span><div id="tickerText">جاري تجهيز آخر الإشعارات من المصادر العامة…</div></section>
+
+  <section id="map" class="panel map-panel">
+    <div class="section-head"><div><div class="eyebrow">GLOBAL INCIDENT BOARD</div><h2>خريطة النشاط المنشور</h2></div><div class="legend"><span><i class="hack"></i>متسللون</span><span><i class="scan"></i>فحص</span><span><i class="ddos"></i>DDoS</span></div></div>
+    <div class="map-wrap"><div id="worldMap" aria-label="خريطة النشاط السيبراني"></div><aside class="incident-list"><div class="aside-title">هجمات اليوم <small>PUBLIC REPORTS</small></div><div id="incidents"></div></aside></div>
+    <p class="disclaimer">الخريطة تعرض حوادث وتقارير منشورة أو بيانات تجميعية؛ السهم ليس دليلًا على إسناد حكومي أو مراقبة لحظية لكل حركة على الإنترنت.</p>
+  </section>
+
+  <section id="osint" class="panel osint-panel">
+    <div class="section-head"><div><div class="eyebrow">OSINT//LOCATE</div><h2>صورة واحدة. أدلة متعددة.</h2><p>حلّل صورة محليًا في المتصفح: EXIF، GPS إن وجد، النصوص المرئية ومؤشرات الموقع. لا نرفع الصورة للخادم في هذه النسخة.</p></div><div class="privacy-badge">LOCAL ANALYSIS<br><b>NO UPLOAD</b></div></div>
+    <label class="dropzone" id="dropzone"><input id="imageInput" type="file" accept="image/jpeg,image/png,image/webp"><div class="upload-icon">⌁</div><strong>اسحب الصورة هنا</strong><span>أو اضغط لاختيار صورة — JPG / PNG / WEBP</span></label>
+    <div id="osintResult" class="osint-result hidden"><div class="result-image"><img id="preview" alt="الصورة المختارة"></div><div class="evidence"><div class="evidence-head"><span>RESULT</span><b id="locationGuess">لم يتم العثور على GPS</b></div><div id="exifGrid" class="evidence-grid"></div><div class="safe-note">⚿ التحليل محلي. لا تحفظ الصفحة الصورة ولا ترسلها إلى خدمة خارجية.</div></div></div>
+  </section>
+
+  <section class="columns">
+    <article id="news" class="panel"><div class="section-head"><div><div class="eyebrow">INTEL FEED</div><h2>أبرز الأخبار</h2></div><span class="live-pill">LIVE</span></div><div id="newsList"></div></article>
+    <article id="ctf" class="panel"><div class="section-head"><div><div class="eyebrow">COMPETITIVE SECURITY</div><h2>CTF / الترتيب</h2></div><span class="live-pill">2026</span></div><div id="teams"></div></article>
+  </section>
+
+  <section class="stats-row"><div><b id="incidentCount">—</b><span>تقارير اليوم</span></div><div><b id="countryCount">—</b><span>دول ظاهرة</span></div><div><b id="newsCount">—</b><span>أخبار</span></div><div><b id="teamCount">—</b><span>فرق CTF</span></div></section>
+</main>
+
+<footer><span>CTF//PULSE</span> · Public-source intelligence · لا نعتمد على بيانات سرية أو كلمات مرور · <a href="#top">↑</a></footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="app.js"></script>
+</body>
+</html>
