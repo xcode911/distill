@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css"><link rel="stylesheet" href="analytics.css">
 </head>
 <body>
 <header class="topbar"><a class="brand" href="#top"><b>CTF</b>//PULSE</a><nav><a href="#map">الخريطة</a><a href="#osint">OSINT</a><a href="#analytics">الإحصائيات</a><a href="#news">الأخبار</a><a href="#ctf">CTF</a></nav><button id="loginBtn" class="login">تسجيل الدخول <span>↗</span></button></header>
@@ -28,5 +28,5 @@ security          <b>HTTPS</b>
 <section class="columns"><article id="news" class="panel"><div class="section-head"><div><div class="eyebrow">INTEL FEED</div><h2>الأخبار والثغرات</h2></div><span class="live-pill">CISA KEV</span></div><div id="newsList"></div></article><article id="ctf" class="panel"><div class="section-head"><div><div class="eyebrow">COMPETITIVE SECURITY</div><h2>ترتيب CTF</h2></div><span class="live-pill">CTFTIME API</span></div><div id="teams"></div></article></section>
 <section class="stats-row"><div><b id="incidentCount">—</b><span>سجلات تهديد</span></div><div><b id="countryCount">—</b><span>دول</span></div><div><b id="newsCount">—</b><span>ثغرات KEV</span></div><div><b id="teamCount">—</b><span>مصادر CTF</span></div></section>
 </main><footer><span>CTF//PULSE</span> · Public-source intelligence · <a href="#top">↑</a></footer>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script><script src="app.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script><script src="app.js"></script><script src="analytics.js"></script>
 </body></html>
