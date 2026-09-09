@@ -1,0 +1,32 @@
+name: Build PUBG Offline Arena
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'PUBG-Offline/game/**'
+      - '.github/workflows/build-pubg-offline.yml'
+jobs:
+  windows-build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: PUBG-Offline/game
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: PUBG-Offline/game/package.json
+      - name: Install dependencies
+        run: npm install
+      - name: Package Windows EXE
+        run: npm run dist
+      - name: Upload portable EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: PUBG-Offline-Arena-Windows
+          path: PUBG-Offline/game/dist/*.exe
+          if-no-files-found: error
