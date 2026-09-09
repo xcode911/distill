@@ -1,0 +1,27 @@
+{
+  "name": "pubg-offline-arena",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Offline battle royale prototype with no login or network dependency at runtime.",
+  "main": "electron.cjs",
+  "scripts": {
+    "build": "vite build",
+    "start": "electron .",
+    "dist": "npm run build && electron-builder --win portable --x64"
+  },
+  "dependencies": {
+    "three": "^0.180.0"
+  },
+  "devDependencies": {
+    "electron": "^38.0.0",
+    "electron-builder": "^26.0.12",
+    "vite": "^7.1.0"
+  },
+  "build": {
+    "appId": "local.pubg.offline.arena",
+    "productName": "PUBG Offline Arena",
+    "files": ["dist/**/*", "electron.cjs"],
+    "asar": true,
+    "portable": {"artifactName": "PUBG-Offline-Arena-${version}.exe"}
+  }
+}
