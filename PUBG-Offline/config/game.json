@@ -1,0 +1,16 @@
+{
+  "project": "PUBG Offline Training",
+  "mode": "offline_training",
+  "internet_required": false,
+  "bots": true,
+  "vehicles": true,
+  "inventory": true,
+  "loot": true,
+  "attachments": true,
+  "weapon_reload": true,
+  "safe_zone": true,
+  "local_cosmetics": true,
+  "maps": ["Training Island", "Desert", "Forest", "Snow"] ,
+  "performance_target": {"resolution":"1280x720","preset":"very_low","target_fps":60},
+  "asset_policy": "Use original or redistributable assets only; PUBG proprietary files are not bundled."
+}
