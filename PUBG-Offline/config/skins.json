@@ -1,0 +1,34 @@
+{
+  "note": "Original/inspired cosmetic definitions only. Do not bundle extracted PUBG assets.",
+  "weapon_skins": [
+    {"id":"m416_glacier_inspired","weapon":"M416","name":"Glacier Inspired","rarity":"mythic","style":"icy blue"},
+    {"id":"m416_fool_inspired","weapon":"M416","name":"The Fool Inspired","rarity":"mythic","style":"purple joker"},
+    {"id":"m416_blood_bones_inspired","weapon":"M416","name":"Blood & Bones Inspired","rarity":"epic","style":"bone crimson"},
+    {"id":"m416_lizard_roar_inspired","weapon":"M416","name":"Lizard Roar Inspired","rarity":"epic","style":"reptile green"},
+    {"id":"m416_shark_bite_inspired","weapon":"M416","name":"Shark Bite Inspired","rarity":"epic","style":"ocean shark"},
+    {"id":"akm_scarecrow_inspired","weapon":"AKM","name":"Scarecrow Inspired","rarity":"epic","style":"harvest scarecrow"},
+    {"id":"akm_joker_inspired","weapon":"AKM","name":"Joker Inspired","rarity":"epic","style":"purple red"},
+    {"id":"akm_glacier_inspired","weapon":"AKM","name":"Glacier Inspired","rarity":"mythic","style":"frost blue"},
+    {"id":"akm_desert_fossil_inspired","weapon":"AKM","name":"Desert Fossil Inspired","rarity":"epic","style":"sand fossil"},
+    {"id":"scar_pumpkin_inspired","weapon":"SCAR-L","name":"Enchanted Pumpkin Inspired","rarity":"epic","style":"orange Halloween"},
+    {"id":"scar_phoenix_inspired","weapon":"SCAR-L","name":"Phoenix Rising Inspired","rarity":"legendary","style":"fire phoenix"},
+    {"id":"m762_dragon_inspired","weapon":"M762","name":"Dragon Inspired","rarity":"legendary","style":"red dragon"},
+    {"id":"m762_hellfire_inspired","weapon":"M762","name":"Hellfire Inspired","rarity":"legendary","style":"infernal red"},
+    {"id":"ump_annabelle_inspired","weapon":"UMP45","name":"Doll Horror Inspired","rarity":"epic","style":"dark doll"},
+    {"id":"ump_space_inspired","weapon":"UMP45","name":"Space Commander Inspired","rarity":"epic","style":"space armor"},
+    {"id":"dp28_dragon_inspired","weapon":"DP-28","name":"Dragon Inspired","rarity":"epic","style":"dragon"},
+    {"id":"awm_commander_inspired","weapon":"AWM","name":"Field Commander Inspired","rarity":"epic","style":"military"},
+    {"id":"groza_nemesis_inspired","weapon":"Groza","name":"Bloodstained Nemesis Inspired","rarity":"legendary","style":"dark crimson"},
+    {"id":"vector_lightning_inspired","weapon":"Vector","name":"Lightning Inspired","rarity":"epic","style":"electric blue"},
+    {"id":"uzi_zero_inspired","weapon":"UZI","name":"Absolute Zero Inspired","rarity":"epic","style":"ice white blue"}
+  ],
+  "outfits": [
+    {"id":"baby_shark_yellow_inspired","name":"Yellow Shark Outfit Inspired","rarity":"rare"},
+    {"id":"pharaoh_inspired","name":"Pharaoh Outfit Inspired","rarity":"legendary"},
+    {"id":"season1_red_shirt_inspired","name":"Classic Red Shirt Inspired","rarity":"rare"},
+    {"id":"season1_red_pants_inspired","name":"Classic Red Pants Inspired","rarity":"rare"},
+    {"id":"bape_camo_inspired","name":"Urban Camo Inspired","rarity":"epic"},
+    {"id":"yeti_inspired","name":"Yeti Outfit Inspired","rarity":"epic"},
+    {"id":"mummy_inspired","name":"Mummy Outfit Inspired","rarity":"epic"}
+  ]
+}
