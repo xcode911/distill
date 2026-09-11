@@ -1,8 +1,73 @@
 {
   "source": "CISA KEV",
   "catalogVersion": "2026.09.11",
-  "updatedAt": "2026-09-11T16:45:06.849742+00:00",
+  "updatedAt": "2026-09-11T21:17:39.087288+00:00",
   "vulnerabilities": [
+    {
+      "cveID": "CVE-2026-84869",
+      "vendorProject": "ConnectWise",
+      "product": "ScreenConnect",
+      "vulnerabilityName": "ConnectWise ScreenConnect Improper Privilege Management and Missing Authorization Vulnerability",
+      "dateAdded": "2026-09-11",
+      "shortDescription": "ConnectWise ScreenConnect contains both an improper privilege management and missing authorization vulnerability that may allow an attacker to file transfer and execution through an active remote sessions without authorization or host confirmation.",
+      "requiredAction": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+      "dueDate": "2026-09-14",
+      "knownRansomwareCampaignUse": "Unknown",
+      "forensicTriage": "Yes",
+      "notes": "https://www.connectwise.com/company/trust/security-bulletins/2026-09-08-screenconnect-bulletin ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2026-84869",
+      "cwes": [
+        "CWE-269",
+        "CWE-862"
+      ]
+    },
+    {
+      "cveID": "CVE-2026-42016",
+      "vendorProject": "JFrog",
+      "product": "Artifactory",
+      "vulnerabilityName": "JFrog Artifactory Incorrect Authorization Vulnerability",
+      "dateAdded": "2026-09-11",
+      "shortDescription": "JFrog Artifactory contains an incorrect authorization vulnerability that allows leads to privilege escalation attack due to a validation check of the token signature/issuer and not the token’s scope.",
+      "requiredAction": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+      "dueDate": "2026-09-25",
+      "knownRansomwareCampaignUse": "Unknown",
+      "forensicTriage": "No",
+      "notes": "https://docs.jfrog.com/releases/docs/jfrog-security-advisories ; https://docs.jfrog.com/releases/docs/artifactory-self-managed-releases ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2026-42016",
+      "cwes": [
+        "CWE-863"
+      ]
+    },
+    {
+      "cveID": "CVE-2026-42018",
+      "vendorProject": "JFrog",
+      "product": "Artifactory",
+      "vulnerabilityName": "JFrog Artifactory Improper Authentication Vulnerability",
+      "dateAdded": "2026-09-11",
+      "shortDescription": "JFrog Artifactory contains an improper authentication vulnerability that could return an internal anonymous-user token to an unauthenticated caller when anonymous access is disabled, potentially exposing sensitive resources.",
+      "requiredAction": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+      "dueDate": "2026-09-25",
+      "knownRansomwareCampaignUse": "Unknown",
+      "forensicTriage": "No",
+      "notes": "https://docs.jfrog.com/releases/docs/jfrog-security-advisories ; https://docs.jfrog.com/releases/docs/artifactory-self-managed-releases ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2026-42018",
+      "cwes": [
+        "CWE-287"
+      ]
+    },
+    {
+      "cveID": "CVE-2026-85706",
+      "vendorProject": "GitLab",
+      "product": "Community Edition and Enterprise Edition",
+      "vulnerabilityName": "GitLab Community Edition and Enterprise Edition Path Traversal Vulnerability",
+      "dateAdded": "2026-09-11",
+      "shortDescription": "GitLab Community Edition and Enterprise Edition contains a path traversal vulnerability that allows an unauthenticated user to read arbitrary files due to an improper path confinement and missing authentication enforcement in the repository commits API.",
+      "requiredAction": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+      "dueDate": "2026-09-14",
+      "knownRansomwareCampaignUse": "Unknown",
+      "forensicTriage": "Yes",
+      "notes": "https://docs.gitlab.com/releases/patches/patch-release-gitlab-19-3-2-released/ ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2026-85706",
+      "cwes": [
+        "CWE-35"
+      ]
+    },
     {
       "cveID": "CVE-2026-86060",
       "vendorProject": "MikroTik",
@@ -264,71 +329,6 @@
       "notes": "https://sangomakb.atlassian.net/wiki/spaces/Switchvox/pages/1802371073/Switchvox+-+Release+Notes+Version+8.4.0.2+July+14+2026 ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2026-9586",
       "cwes": [
         "CWE-89"
-      ]
-    },
-    {
-      "cveID": "CVE-2026-83548",
-      "vendorProject": "SonicWall",
-      "product": "SMA1000 Appliances",
-      "vulnerabilityName": "SonicWall SMA1000 Appliances Server-Side Request Forgery Vulnerability",
-      "dateAdded": "2026-09-02",
-      "shortDescription": "SonicWall SMA1000 Appliances contains a server-side request forgery vulnerability that could allow a remote unauthenticated attacker to gain unauthorized access to sensitive functionality and perform unauthorized operations.",
-      "requiredAction": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
-      "dueDate": "2026-09-05",
-      "knownRansomwareCampaignUse": "Unknown",
-      "forensicTriage": "Yes",
-      "notes": "https://psirt.global.sonicwall.com/vuln-detail/SNWLID-2026-0016 ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2026-83548",
-      "cwes": [
-        "CWE-918",
-        "CWE-441"
-      ]
-    },
-    {
-      "cveID": "CVE-2026-83549",
-      "vendorProject": "SonicWall",
-      "product": "SMA1000 Appliances",
-      "vulnerabilityName": "SonicWall SMA1000 Appliances OS Command Injection Vulnerability",
-      "dateAdded": "2026-09-02",
-      "shortDescription": "SonicWall SMA1000 Appliances contains an OS command injection vulnerability that could enable a remote authenticated attacker as administrator to execute arbitrary OS commands, resulting in remote code execution.",
-      "requiredAction": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
-      "dueDate": "2026-09-05",
-      "knownRansomwareCampaignUse": "Unknown",
-      "forensicTriage": "Yes",
-      "notes": "https://psirt.global.sonicwall.com/vuln-detail/SNWLID-2026-0016 ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2026-83549",
-      "cwes": [
-        "CWE-78"
-      ]
-    },
-    {
-      "cveID": "CVE-2026-82078",
-      "vendorProject": "PaperCut",
-      "product": "NG/MF",
-      "vulnerabilityName": "PaperCut NG/MF Unsafe Reflection Vulnerability",
-      "dateAdded": "2026-08-31",
-      "shortDescription": "PaperCut NG/MF contains an unsafe reflection vulnerability that allows an attacker to manipulate system configuration parameters and execute arbitrary Java bytecode residing on the application classpath under the security context of the PaperCut server process. This vulnerability can be chained with CVE-2026-81578.",
-      "requiredAction": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
-      "dueDate": "2026-09-14",
-      "knownRansomwareCampaignUse": "Unknown",
-      "forensicTriage": "No",
-      "notes": "https://www.papercut.com/kb/Main/security-bulletin-27-aug-2026-urgent-security-advisory/?lid=2oneu2wt0ct4 ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2026-82078",
-      "cwes": [
-        "CWE-470"
-      ]
-    },
-    {
-      "cveID": "CVE-2026-81578",
-      "vendorProject": "PaperCut",
-      "product": "NG/MF",
-      "vulnerabilityName": "PaperCut NG/MF Missing Authentication for Critical Function Vulnerability",
-      "dateAdded": "2026-08-31",
-      "shortDescription": "PaperCut NG/MF contains a missing authentication for critical function vulnerability which allows an unauthenticated remote attacker to modify certain system configurations. This vulnerability can be chained with CVE-2026-82078.",
-      "requiredAction": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
-      "dueDate": "2026-09-14",
-      "knownRansomwareCampaignUse": "Unknown",
-      "forensicTriage": "No",
-      "notes": "https://www.papercut.com/kb/Main/security-bulletin-27-aug-2026-urgent-security-advisory/ ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2026-81578",
-      "cwes": [
-        "CWE-306"
       ]
     }
   ]
