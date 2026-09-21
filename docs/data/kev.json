@@ -1,7 +1,7 @@
 {
   "source": "CISA KEV",
   "catalogVersion": "2026.09.18",
-  "updatedAt": "2026-09-20T21:03:04.390586+00:00",
+  "updatedAt": "2026-09-21T05:28:40.475335+00:00",
   "vulnerabilities": [
     {
       "cveID": "CVE-2025-39964",
