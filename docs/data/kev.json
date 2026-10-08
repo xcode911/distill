@@ -1,7 +1,7 @@
 {
   "source": "CISA KEV",
   "catalogVersion": "2026.10.04",
-  "updatedAt": "2026-10-07T23:18:32.670303+00:00",
+  "updatedAt": "2026-10-08T06:38:35.318722+00:00",
   "vulnerabilities": [
     {
       "cveID": "CVE-2026-88779",
