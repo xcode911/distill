@@ -1,8 +1,24 @@
 {
   "source": "CISA KEV",
-  "catalogVersion": "2026.11.03",
-  "updatedAt": "2026-11-04T20:01:35.262644+00:00",
+  "catalogVersion": "2026.11.04",
+  "updatedAt": "2026-11-05T07:23:20.424652+00:00",
   "vulnerabilities": [
+    {
+      "cveID": "CVE-2024-27834",
+      "vendorProject": "Apple",
+      "product": "Multiple Products",
+      "vulnerabilityName": "Apple Multiple Products Improper Authentication Vulnerability",
+      "dateAdded": "2026-11-04",
+      "shortDescription": "Apple iOS, iPadOS, macOS, Safari, tvOS and watchOS 10.5 contain an improper authentication vulnerability which could allow an attacker with arbitrary read and write capability to bypass pointer authentication.",
+      "requiredAction": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+      "dueDate": "2026-11-18",
+      "knownRansomwareCampaignUse": "Unknown",
+      "forensicTriage": "No",
+      "notes": "https://support.apple.com/en-us/120896 ; https://support.apple.com/en-us/120898 ; https://support.apple.com/en-us/120901 ; https://support.apple.com/en-us/120902 ; https://support.apple.com/en-us/120903 ; https://support.apple.com/en-us/120905 ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2024-27834",
+      "cwes": [
+        "CWE-287"
+      ]
+    },
     {
       "cveID": "CVE-2026-119977",
       "vendorProject": "WordPress",
@@ -316,22 +332,6 @@
       "notes": "https://productcert.siemens.com/productcert/html/ssa-580366.html ; ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2026-110936",
       "cwes": [
         "CWE-427"
-      ]
-    },
-    {
-      "cveID": "CVE-2026-102764",
-      "vendorProject": "BeyondTrust",
-      "product": "Remote Support",
-      "vulnerabilityName": "BeyondTrust Remote Support Authentication Bypass by Spoofing Vulnerability",
-      "dateAdded": "2026-10-16",
-      "shortDescription": "BeyondTrust Remote Support contains an authentication bypass by spoofing vulnerability that could allow a remote attacker to perform file operations on the appliance.",
-      "requiredAction": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
-      "dueDate": "2026-10-19",
-      "knownRansomwareCampaignUse": "Unknown",
-      "forensicTriage": "Yes",
-      "notes": "https://www.beyondtrust.com/trust-center/security-advisories/bt26-05 ; ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2026-102764",
-      "cwes": [
-        "CWE-290"
       ]
     }
   ]
